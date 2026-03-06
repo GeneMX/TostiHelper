@@ -18,7 +18,7 @@ def obtener_menu():
 
 # 2. Configurar la IA
 genai.configure(api_key=st.secrets["GOOGLE_API_KEY"])
-model = genai.GenerativeModel('gemini-1.5-flash')
+model = genai.GenerativeModel('gemini-2.5-flash')
 
 # 3. Interfaz de usuario
 pregunta = st.text_input("¿Qué se te antoja hoy?", placeholder="Ej: ¿Qué trae la tostada?")
@@ -40,4 +40,5 @@ if pregunta:
     # Botón de cierre de venta
 
     st.link_button("✅ ¡Hacer mi pedido ahora!", "https://wa.me/TU_NUMERO_AQUI?text=Hola! Quiero pedir unas tostadas.")
+
 
