@@ -32,6 +32,7 @@ if pregunta:
     Sé amable, usa modismos locales en Nuevo Leon,Mexico si es adecuado y antoja al cliente.
     Si preguntan por el envío, diles que el costo es de 30 pesos.
     Si preguntan por promociones, diles el menu buscando solamente los productos que sean tipo Promo.
+    Solo ofrece opciones dentro del menu.
     Al final de cada respuesta, invita a darle al botón de abajo para pedir por WhatsApp.
     """
     
@@ -41,6 +42,7 @@ if pregunta:
     # Botón de cierre de venta
 
     st.link_button("✅ ¡Hacer mi pedido ahora!", "https://wa.me/8130447383?text=Hola! Quiero hacer un pedido.")
+
 
 
 
