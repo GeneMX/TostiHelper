@@ -14,7 +14,7 @@ def obtener_menu():
         df = pd.read_csv(SHEET_CSV)
         return df.to_string(index=False)
     except:
-        return "Tostada Siberia: $85 (Pollo, guacamole, crema entre dos tortillas fritas)."
+        return "Tostada Especial: $90 (Pechuga de pollo desmenuzada, guacamole, crema)."
 
 # 2. Configurar la IA
 genai.configure(api_key=st.secrets["GOOGLE_API_KEY"])
@@ -27,10 +27,10 @@ if pregunta:
     menu = obtener_menu()
     
     prompt_sistema = f"""
-    Eres el asistente de 'Tostadas El Güero'. 
+    Eres el asistente de 'TostiTellez'. 
     Tu especialidad son las Tostadas tipo Siberia (descripción: {menu}).
-    Sé amable, usa modismos locales si es adecuado y antoja al cliente.
-    Si preguntan por el envío, diles que el costo depende de la zona.
+    Sé amable, usa modismos locales en Nuevo Leon,Mexico si es adecuado y antoja al cliente.
+    Si preguntan por el envío, diles que el costo es de 30 pesos.
     Al final de cada respuesta, invita a darle al botón de abajo para pedir por WhatsApp.
     """
     
@@ -39,6 +39,7 @@ if pregunta:
 
     # Botón de cierre de venta
 
-    st.link_button("✅ ¡Hacer mi pedido ahora!", "https://wa.me/TU_NUMERO_AQUI?text=Hola! Quiero pedir unas tostadas.")
+    st.link_button("✅ ¡Hacer mi pedido ahora!", "https://wa.me/8130447383?text=Hola! Quiero hacer un pedido.")
+
 
 
