@@ -17,7 +17,7 @@ def obtener_menu():
         return "Tostada Siberia: $85 (Pollo, guacamole, crema entre dos tortillas fritas)."
 
 # 2. Configurar la IA
-genai.configure(api_key=st.secrets["GOOGLE_API_KEY"])
+genai.configure(api_key=st.secrets["AIzaSyAByGgGvFRwPA2SP4KxXrEa2EOpll1r8fQ"])
 model = genai.GenerativeModel('gemini-1.5-flash')
 
 # 3. Interfaz de usuario
@@ -38,4 +38,5 @@ if pregunta:
     st.info(response.text)
 
     # Botón de cierre de venta
+
     st.link_button("✅ ¡Hacer mi pedido ahora!", "https://wa.me/TU_NUMERO_AQUI?text=Hola! Quiero pedir unas tostadas.")
