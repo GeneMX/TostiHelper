@@ -120,8 +120,8 @@ with col_izq:
                 st.error("Asistente temporalmente ocupado. - Se contactara con un agente por whatsapp")
                  # WHATSAPP
                 tel_negocio = "528130447383" # <-- REEMPLAZA CON EL CELULAR REAL
-                msg_wa = f"¡Hola! Mensaje:%0A{preg}"
-                st.link_button("🚀 CONFIRMAR POR WHATSAPP", f"https://wa.me/{tel_negocio}?text={msg_wa}")
+                msg_wa = f"Mensaje:%0A{preg}"
+                st.link_button("🚀 CONTACTAR POR WHATSAPP", f"https://wa.me/{tel_negocio}?text={msg_wa}")
 
 
     # --- BOTONES DE PRODUCTOS ---
@@ -180,6 +180,7 @@ with col_der:
         lista_final = "%0A".join([f"• {x['nombre']} (${x['precio']})" for x in st.session_state.carrito])
         msg_wa = f"¡Hola! Pedido:%0A{lista_final}%0A%0A*TOTAL: ${total}*{detalles_pago}"
         st.link_button("🚀 CONFIRMAR POR WHATSAPP", f"https://wa.me/{tel_negocio}?text={msg_wa}")
+
 
 
 
