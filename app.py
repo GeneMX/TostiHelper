@@ -134,7 +134,8 @@ with col_der:
     if not st.session_state.carrito:
         st.write("Selecciona productos del menú.")
     else:
-        total = sum(item['precio'] for item in st.session_state.carrito)
+        # Versión segura que ignora errores de texto en los precios
+        total = sum(float(item['precio']) if str(item['precio']).replace('.','',1).isdigit() else 0.0 for item in st.session_state.carrito)
         for i, item in enumerate(st.session_state.carrito):
             c1, c2 = st.columns([4, 1])
             c1.write(f"{item['nombre']} (${item['precio']})")
@@ -169,6 +170,7 @@ with col_der:
         lista_final = "%0A".join([f"• {x['nombre']} (${x['precio']})" for x in st.session_state.carrito])
         msg_wa = f"¡Hola! Pedido Siberia:%0A{lista_final}%0A%0A*TOTAL: ${total}*{detalles_pago}"
         st.link_button("🚀 CONFIRMAR POR WHATSAPP", f"https://wa.me/{tel_negocio}?text={msg_wa}")
+
 
 
 
