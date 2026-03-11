@@ -78,13 +78,13 @@ with col_izq:
             
             # Coordenadas de Tostadas Siberia Juárez para el mapa de Streamlit
             # (Ajusta lat y lon según la ubicación exacta si es necesario)
-            mapa_data = pd.DataFrame({
-                'lat': [25.6427177],
-                'lon': [-100.0915281]
+            mapa_data = pd.DataFrame({ 
+                'lat': [25.644955073270065],
+                'lon': [-100.05841009550268]
             })
             st.map(mapa_data)
             
-            st.link_button("🗺️ ABRIR EN GOOGLE MAPS", "https://maps.app.goo.gl/ChIJTamoDSjDYoYRgNx76mDQ3o0")    
+            st.link_button("🗺️ ABRIR EN GOOGLE MAPS", "https://maps.app.goo.gl/HeH2wAmWWxjhQ6Hk9")    
             
             for _, row in df_limpio.iterrows():
                 # Extraemos los datos asegurando que no sean NaN
@@ -194,6 +194,7 @@ with col_der:
         lista_final = "%0A".join([f"• {x['nombre']} (${x['precio']})" for x in st.session_state.carrito])
         msg_wa = f"¡Hola! Pedido:%0A{lista_final}%0A%0A*TOTAL: ${total}*{detalles_pago}"
         st.link_button("🚀 CONFIRMAR POR WHATSAPP", f"https://wa.me/{tel_negocio}?text={msg_wa}")
+
 
 
 
