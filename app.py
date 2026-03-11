@@ -6,7 +6,6 @@ import time
 # --- CONFIGURACIÓN DE PÁGINA ---
 st.set_page_config(page_title="Tostadas Siberia - Pedidos", page_icon="🌮", layout="wide")
 
-# --- INICIALIZACIÓN DEL CARRITO ---
 if "carrito" not in st.session_state:
     st.session_state.carrito = []
 
@@ -18,23 +17,42 @@ if "GOOGLE_API_KEY" not in st.secrets:
 genai.configure(api_key=st.secrets["GOOGLE_API_KEY"])
 model = genai.GenerativeModel('models/gemini-2.5-flash')
 
-# --- FUNCIÓN PARA CARGAR DATOS ---
+# --- FUNCIÓN DE CARGA INDESTRUCTIBLE ---
 SHEET_URL = "https://docs.google.com/spreadsheets/d/1SWaypb3Fq1rR_S1van5P8OYcJhO9m_lxYBAoLRgDjCk/edit?usp=sharing"
 
 @st.cache_data(ttl=300)
 def cargar_datos(url):
     try:
         df = pd.read_csv(url)
-        df.columns = df.columns.str.strip().str.lower()
-        mapping = {'producto': 'producto', 'nombre': 'producto', 'precio': 'precio', 'costo': 'precio', 'descripcion': 'descripcion', 'promo': 'descripcion'}
-        df = df.rename(columns={c: mapping[c] for c in df.columns if c in mapping})
-        return df
-    except:
+        # Limpieza inicial de nombres de columnas
+        df.columns = [str(c).strip().lower() for c in df.columns]
+        
+        # Diccionario para renombrar columnas por aproximación
+        nuevos_nombres = {}
+        for col in df.columns:
+            if any(x in col for x in ['prod', 'nom', 'item', 'platillo']):
+                nuevos_nombres[col] = 'producto'
+            elif any(x in col for x in ['prec', 'cost', 'val', 'monto']):
+                nuevos_nombres[col] = 'precio'
+            elif any(x in col for x in ['desc', 'det', 'promo', 'info']):
+                nuevos_nombres[col] = 'descripcion'
+        
+        df = df.rename(columns=nuevos_nombres)
+        
+        # Si después del mapeo faltan columnas, las creamos para evitar el KeyError
+        columnas_necesarias = ['producto', 'precio', 'descripcion']
+        for col in columnas_necesarias:
+            if col not in df.columns:
+                df[col] = "N/A" if col != 'precio' else 0
+        
+        return df[columnas_necesarias] # Retornamos solo lo que necesitamos
+    except Exception as e:
+        st.error(f"Error de conexión con datos: {e}")
         return pd.DataFrame(columns=['producto', 'precio', 'descripcion'])
 
 df_menu = cargar_datos(SHEET_URL)
 
-# --- DISEÑO ---
+# --- INTERFAZ ---
 st.title("🌮 Tostadas Tipo Siberia: Pedido Inteligente")
 
 col_izq, col_der = st.columns([2, 1])
@@ -44,55 +62,65 @@ with col_izq:
     pregunta = st.text_input("¿En qué puedo ayudarte?", placeholder="Pide el menú o pregunta por promociones...")
     
     if pregunta:
-        pregunta_min = pregunta.lower()
+        preg = pregunta.lower()
         
-        # 1. LÓGICA DE PALABRAS CLAVE (Filtros Directos)
-        if "menu" in pregunta_min or "menú" in pregunta_min:
-            st.info("📜 **Nuestro Menú Actual:**")
-            for i, row in df_menu.iterrows():
+        # 1. Filtro Menú
+        if any(x in preg for x in ["menu", "menú", "carta", "lista"]):
+            st.info("📜 **Nuestro Menú:**")
+            for _, row in df_menu.iterrows():
                 st.write(f"- **{row['producto']}**: ${row['precio']} ({row['descripcion']})")
         
-        elif "promocion" in pregunta_min or "promociones" in pregunta_min or "promo" in pregunta_min:
-            # Filtramos el dataframe buscando la palabra 'promo' en la descripción
-            promos = df_menu[df_menu['descripcion'].str.contains("promo|especial|descuento", case=False, na=False)]
+        # 2. Filtro Promociones
+        elif any(x in preg for x in ["promo", "descuento", "especial", "oferta"]):
+            promos = df_menu[df_menu['descripcion'].astype(str).str.contains("promo|especial|descuento", case=False, na=False)]
             if not promos.empty:
-                st.success("🎉 **¡Tenemos estas promociones para ti!**")
-                for i, row in promos.iterrows():
-                    st.write(f"✅ **{row['producto']}**: {row['descripcion']} a solo **${row['precio']}**")
+                st.success("🎉 **Promociones encontradas:**")
+                for _, row in promos.iterrows():
+                    st.write(f"✅ **{row['producto']}**: {row['descripcion']} - **${row['precio']}**")
             else:
-                st.warning("Por el momento no tenemos promociones marcadas, ¡pero nuestras Tostadas Siberia tienen el mejor precio de la ciudad!")
+                st.warning("No hay promociones marcadas en el menú por ahora.")
         
-        # 2. LÓGICA DE INTELIGENCIA ARTIFICIAL (Para todo lo demás)
+        # 3. Inteligencia Artificial
         else:
             try:
-                contexto_menu = df_menu.to_string(index=False)
-                prompt_sistema = f"Eres el mesero de Tostadas Siberia. Usa este menú: {contexto_menu}. Sé breve y antojable."
-                with st.spinner("Escribiendo..."):
-                    response = model.generate_content([prompt_sistema, pregunta])
+                contexto = df_menu.to_string(index=False)
+                   prompt_sistema = f"""
+            		Eres el asistente de 'TostiTellez'. 
+            		Tu especialidad son las Tostadas tipo Siberia.            Usa este menú: {contexto_menu}.
+            		REGLAS:
+            		- Sé amable, usa modismos locales en Nuevo Leon,Mexico si es adecuado y antoja al cliente.
+            		- Si preguntan por el envío, diles que el costo es de 30 pesos.
+            		- Si preguntan por promociones, diles el menu buscando solamente los productos que sean tipo Promo.
+            		- Solo ofrece opciones dentro del menu.
+            		- Al final de cada respuesta, invita a darle al botón de abajo para pedir por WhatsApp.
+            		- Si piden algo fuera del menú, sugiere lo más parecido.
+            		- Sé muy amable y describe los ingredientes (guacamole, crema, pollo) de forma antojable.
+            		- Si piden sugerencias, recomienda el combo con consomé.
+        		"""
+                with st.spinner("Analizando..."):
+                    response = model.generate_content([prompt, pregunta])
                     st.info(response.text)
             except Exception as e:
-                if "429" in str(e) or "ResourceExhausted" in str(e):
-                    st.warning("⚠️ Sistema ocupado. Reintenta en 10 segundos.")
-                    time.sleep(2)
-                else:
-                    st.error(f"Error técnico: {e}")
+                st.error("Asistente temporalmente ocupado.")
 
-    # --- BOTONERA DE PRODUCTOS ---
+    # --- BOTONES DE PRODUCTOS ---
     st.write("---")
-    st.subheader("📋 Haz clic para añadir")
+    st.subheader("📋 Añade a tu pedido")
     grid = st.columns(2)
     for i, row in df_menu.iterrows():
         with grid[i % 2]:
-            nombre = row.get('producto', 'Producto')
-            precio = row.get('precio', 0)
-            if st.button(f"➕ {nombre} (${precio})", key=f"btn_{i}"):
-                st.session_state.carrito.append({"nombre": nombre, "precio": precio})
+            # Acceso seguro a los datos
+            p_nom = row['producto']
+            p_pre = row['precio']
+            if st.button(f"➕ {p_nom} (${p_pre})", key=f"btn_{i}"):
+                st.session_state.carrito.append({"nombre": p_nom, "precio": p_pre})
+                st.toast(f"✅ {p_nom} añadido")
                 st.rerun()
 
 with col_der:
     st.subheader("🛒 Tu Pedido")
     if not st.session_state.carrito:
-        st.write("Carrito vacío.")
+        st.write("Selecciona productos del menú.")
     else:
         total = sum(item['precio'] for item in st.session_state.carrito)
         for i, item in enumerate(st.session_state.carrito):
@@ -105,18 +133,18 @@ with col_der:
         st.divider()
         st.write(f"### Total: ${total}")
 
-        # --- SECCIÓN DE PAGO ---
-        metodo = st.radio("Método de pago:", ["Efectivo (Necesito cambio)", "Pago exacto / Tarjeta"])
+        # GESTIÓN DE PAGO
+        metodo = st.radio("Pago:", ["Efectivo (Necesito cambio)", "Exacto / Tarjeta"])
         detalles_pago = ""
         
         if "Efectivo" in metodo:
-            paga_con = st.number_input("¿Con cuánto pagas?", min_value=float(total), step=10.0, value=float(total))
+            paga_con = st.number_input("¿Con cuánto pagas?", min_value=float(total), value=float(total), step=10.0)
             if paga_con > total:
                 cambio = paga_con - total
                 st.success(f"Cambio: ${cambio:.2f}")
                 detalles_pago = f"%0A• Paga con: ${paga_con}%0A• Cambio: ${cambio:.2f}"
             else:
-                detalles_pago = "%0A• Pago exacto en efectivo."
+                detalles_pago = "%0A• Pago exacto."
         else:
             detalles_pago = "%0A• Pago exacto / Tarjeta."
 
@@ -124,9 +152,8 @@ with col_der:
             st.session_state.carrito = []
             st.rerun()
 
-        # --- BOTÓN WHATSAPP ---
-        tel_negocio = "528130447383" # <-- REEMPLAZA ESTO
-        lista_pedido = "%0A".join([f"• {x['nombre']} (${x['precio']})" for x in st.session_state.carrito])
-        msg = f"¡Hola! Pedido Siberia:%0A{lista_pedido}%0A%0A*TOTAL: ${total}*{detalles_pago}"
-        st.link_button("🚀 ENVIAR POR WHATSAPP", f"https://wa.me/{tel_negocio}?text={msg}")
-
+        # WHATSAPP
+        tel_negocio = "528130447383" # <-- REEMPLAZA CON EL CELULAR REAL
+        lista_final = "%0A".join([f"• {x['nombre']} (${x['precio']})" for x in st.session_state.carrito])
+        msg_wa = f"¡Hola! Pedido Siberia:%0A{lista_final}%0A%0A*TOTAL: ${total}*{detalles_pago}"
+        st.link_button("🚀 CONFIRMAR POR WHATSAPP", f"https://wa.me/{tel_negocio}?text={msg_wa}")
