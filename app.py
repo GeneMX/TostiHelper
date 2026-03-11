@@ -62,12 +62,18 @@ with col_izq:
     if pregunta:
         contexto_menu = df_menu.to_string(index=False)
         prompt_sistema = f"""
-        Eres el mesero virtual de 'Tostadas Siberia'. 
-        Usa este menú: {contexto_menu}.
-        REGLAS:
-        - Si piden algo fuera del menú, sugiere lo más parecido.
-        - Sé muy amable y describe los ingredientes (guacamole, crema, pollo) de forma antojable.
-        - Si piden sugerencias, recomienda el combo con consomé.
+            Eres el asistente de 'TostiTellez'. 
+            Usa este menú: {contexto_menu}.
+            Tu especialidad son las Tostadas tipo Siberia (descripción: {menu}).
+            REGLAS:
+            - Sé amable, usa modismos locales en Nuevo Leon,Mexico si es adecuado y antoja al cliente.
+            - Si preguntan por el envío, diles que el costo es de 30 pesos.
+            - Si preguntan por promociones, diles el menu buscando solamente los productos que sean tipo Promo.
+            - Solo ofrece opciones dentro del menu.
+            - Al final de cada respuesta, invita a darle al botón de abajo para pedir por WhatsApp.
+            - Si piden algo fuera del menú, sugiere lo más parecido.
+            - Sé muy amable y describe los ingredientes (guacamole, crema, pollo) de forma antojable.
+            - Si piden sugerencias, recomienda el combo con consomé.
         """
         try:
             with st.spinner("Escribiendo..."):
@@ -156,6 +162,7 @@ with col_der:
         )
         
         st.link_button("🚀 ENVIAR PEDIDO POR WHATSAPP", f"https://wa.me/{tel_negocio}?text={texto_wa}")
+
 
 
 
