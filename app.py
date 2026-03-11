@@ -68,7 +68,7 @@ with col_izq:
         - Sé muy amable y describe los ingredientes (guacamole, crema, pollo) de forma antojable.
         - Si piden sugerencias, recomienda el combo con consomé.
         """
-        try
+        try:
             with st.spinner("Escribiendo..."):
             response = model.generate_content([prompt_sistema, pregunta])
             st.info(response.text)
@@ -155,5 +155,6 @@ with col_der:
         )
         
         st.link_button("🚀 ENVIAR PEDIDO POR WHATSAPP", f"https://wa.me/{tel_negocio}?text={texto_wa}")
+
 
 
