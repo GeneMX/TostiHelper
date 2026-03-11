@@ -64,11 +64,23 @@ with col_izq:
     if pregunta:
         preg = pregunta.lower()
         
-        # 1. Filtro Menú
+        # 1. Filtro Menú Corregido
         if any(x in preg for x in ["menu", "menú", "carta", "lista"]):
             st.info("📜 **Nuestro Menú:**")
-            for _, row in df_menu.iterrows():
-                st.write(f"- **{row['producto']}**: ${row['precio']} ({row['descripcion']})")
+            # Eliminamos filas que estén totalmente vacías en el Excel
+            df_limpio = df_menu.dropna(subset=['producto']) 
+            
+            for _, row in df_limpio.iterrows():
+                # Extraemos los datos asegurando que no sean NaN
+                nombre = str(row['producto']) if pd.notna(row['producto']) else "Producto"
+                precio = row['precio'] if pd.notna(row['precio']) else 0
+                desc = str(row['descripcion']) if pd.notna(row['descripcion']) else ""
+                
+                # Limpiamos el texto para que no aparezca "NaN" visualmente
+                desc_texto = f"({desc})" if desc != "nan" and desc != "N/A" else ""
+                
+                # Imprimimos de forma limpia
+                st.write(f"• **{nombre}**: ${precio} {desc_texto}")
         
         # 2. Filtro Promociones
         elif any(x in preg for x in ["promo", "descuento", "especial", "oferta"]):
@@ -157,6 +169,7 @@ with col_der:
         lista_final = "%0A".join([f"• {x['nombre']} (${x['precio']})" for x in st.session_state.carrito])
         msg_wa = f"¡Hola! Pedido Siberia:%0A{lista_final}%0A%0A*TOTAL: ${total}*{detalles_pago}"
         st.link_button("🚀 CONFIRMAR POR WHATSAPP", f"https://wa.me/{tel_negocio}?text={msg_wa}")
+
 
 
 
