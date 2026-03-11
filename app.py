@@ -84,7 +84,7 @@ with col_izq:
         else:
             try:
                 contexto = df_menu.to_string(index=False)
-                   prompt_sistema = f"
+                prompt_sistema = f"
             		Eres el asistente de 'TostiTellez'. 
             		Tu especialidad son las Tostadas tipo Siberia.            Usa este menú: {contexto_menu}.
             		REGLAS:
@@ -157,4 +157,5 @@ with col_der:
         lista_final = "%0A".join([f"• {x['nombre']} (${x['precio']})" for x in st.session_state.carrito])
         msg_wa = f"¡Hola! Pedido Siberia:%0A{lista_final}%0A%0A*TOTAL: ${total}*{detalles_pago}"
         st.link_button("🚀 CONFIRMAR POR WHATSAPP", f"https://wa.me/{tel_negocio}?text={msg_wa}")
+
 
