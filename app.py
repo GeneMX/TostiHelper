@@ -1,6 +1,7 @@
 import streamlit as st
 import google.generativeai as genai
 import pandas as pd
+import time
 
 # --- CONFIGURACIÓN DE PÁGINA ---
 st.set_page_config(page_title="Tostadas Siberia - Pedidos", page_icon="🌮", layout="wide")
@@ -155,6 +156,7 @@ with col_der:
         )
         
         st.link_button("🚀 ENVIAR PEDIDO POR WHATSAPP", f"https://wa.me/{tel_negocio}?text={texto_wa}")
+
 
 
 
