@@ -67,7 +67,7 @@ with col_izq:
         # 1. Filtro Menú Corregido
         if any(x in preg for x in ["servicio", "domicilio", "envio", "servicio a domicilio"]):
             st.info(" El costo de envio es de 30 pesos ")
-        if any(x in preg for x in ["menu", "menú", "carta", "lista"]):
+        elif any(x in preg for x in ["menu", "menú", "carta", "lista"]):
             st.info("📜 **Nuestro Menú:**")
             # Eliminamos filas que estén totalmente vacías en el Excel
             df_limpio = df_menu.dropna(subset=['producto']) 
@@ -175,6 +175,7 @@ with col_der:
         lista_final = "%0A".join([f"• {x['nombre']} (${x['precio']})" for x in st.session_state.carrito])
         msg_wa = f"¡Hola! Pedido:%0A{lista_final}%0A%0A*TOTAL: ${total}*{detalles_pago}"
         st.link_button("🚀 CONFIRMAR POR WHATSAPP", f"https://wa.me/{tel_negocio}?text={msg_wa}")
+
 
 
 
