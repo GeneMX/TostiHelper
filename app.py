@@ -159,7 +159,7 @@ with col_der:
             else:
                 detalles_pago = "%0A• Pago exacto."
         else:
-            detalles_pago = "%0A• Pago exacto / Tarjeta."
+            detalles_pago = "%0A• Pago exacto / Transferencia."
 
         if st.button("🗑️ Vaciar Carrito"):
             st.session_state.carrito = []
@@ -168,8 +168,9 @@ with col_der:
         # WHATSAPP
         tel_negocio = "528130447383" # <-- REEMPLAZA CON EL CELULAR REAL
         lista_final = "%0A".join([f"• {x['nombre']} (${x['precio']})" for x in st.session_state.carrito])
-        msg_wa = f"¡Hola! Pedido Siberia:%0A{lista_final}%0A%0A*TOTAL: ${total}*{detalles_pago}"
+        msg_wa = f"¡Hola! Pedido:%0A{lista_final}%0A%0A*TOTAL: ${total}*{detalles_pago}"
         st.link_button("🚀 CONFIRMAR POR WHATSAPP", f"https://wa.me/{tel_negocio}?text={msg_wa}")
+
 
 
 
