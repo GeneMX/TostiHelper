@@ -74,7 +74,7 @@ with col_izq:
         # --- NUEVO FILTRO: UBICACIÓN Y MAPA ---
         elif any(x in preg for x in ["donde", "ubicacion", "ubicación", "direccion", "dirección", "mapa", "llegar"]):
             st.success("📍 **¡Aquí nos puedes encontrar!**")
-            st.write("Av. Lic. Arturo B. de La Garza 411-a, Centro de Benito Juárez, NL.")
+            st.write("Av. Elizama S/N frente al kinder, Mirador de San Antonio, Benito Juárez, NL.")
             
             # Coordenadas de Tostadas Siberia Juárez para el mapa de Streamlit
             # (Ajusta lat y lon según la ubicación exacta si es necesario)
@@ -194,6 +194,7 @@ with col_der:
         lista_final = "%0A".join([f"• {x['nombre']} (${x['precio']})" for x in st.session_state.carrito])
         msg_wa = f"¡Hola! Pedido:%0A{lista_final}%0A%0A*TOTAL: ${total}*{detalles_pago}"
         st.link_button("🚀 CONFIRMAR POR WHATSAPP", f"https://wa.me/{tel_negocio}?text={msg_wa}")
+
 
 
 
