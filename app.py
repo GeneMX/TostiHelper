@@ -85,6 +85,9 @@ with col_izq:
             st.map(mapa_data)
             
             st.link_button("🗺️ ABRIR EN GOOGLE MAPS", "https://maps.app.goo.gl/HeH2wAmWWxjhQ6Hk9")    
+
+            # Crea una copia del menú quitando filas vacías para que no falle
+            df_limpio = df_menu.dropna(subset=['producto'])
             
             for _, row in df_limpio.iterrows():
                 # Extraemos los datos asegurando que no sean NaN
@@ -194,6 +197,7 @@ with col_der:
         lista_final = "%0A".join([f"• {x['nombre']} (${x['precio']})" for x in st.session_state.carrito])
         msg_wa = f"¡Hola! Pedido:%0A{lista_final}%0A%0A*TOTAL: ${total}*{detalles_pago}"
         st.link_button("🚀 CONFIRMAR POR WHATSAPP", f"https://wa.me/{tel_negocio}?text={msg_wa}")
+
 
 
 
