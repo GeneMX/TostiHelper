@@ -69,15 +69,15 @@ with col_izq:
         - Si piden sugerencias, recomienda el combo con consomé.
         """
         try
-        with st.spinner("Escribiendo..."):
+            with st.spinner("Escribiendo..."):
             response = model.generate_content([prompt_sistema, pregunta])
             st.info(response.text)
         except Exception as e:
-        if "429" in str(e) or "ResourceExhausted" in str(e):
-            st.warning("⚠️ El asistente está un poco ocupado atendiendo a otros clientes. Por favor, espera 10 segundos y vuelve a preguntar.")
-            time.sleep(2) # Pausa breve pedagógica
-        else:
-            st.error(f"Ocurrió un error: {e}")
+            if "429" in str(e) or "ResourceExhausted" in str(e):
+                st.warning("⚠️ El asistente está un poco ocupado atendiendo a otros clientes. Por favor, espera 10 segundos y vuelve a preguntar.")
+                time.sleep(2) # Pausa breve pedagógica
+            else:
+                st.error(f"Ocurrió un error: {e}")
        
 
     # 2. Selección de Productos (Botones dinámicos)
