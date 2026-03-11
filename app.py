@@ -18,7 +18,7 @@ genai.configure(api_key=st.secrets["GOOGLE_API_KEY"])
 model = genai.GenerativeModel('models/gemini-2.5-flash')
 
 # --- FUNCIÓN DE CARGA INDESTRUCTIBLE ---
-SHEET_URL = "https://docs.google.com/spreadsheets/d/1SWaypb3Fq1rR_S1van5P8OYcJhO9m_lxYBAoLRgDjCk/edit?usp=sharing"
+SHEET_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vSD6Xflh5DacQ4ZOgPROgXFv1JocZb_0TO8z85CihhgNUGspywHpJhjPWyvslaH63SYv4W3lAa0cgfo/pub?output=csv"
 
 @st.cache_data(ttl=300)
 def cargar_datos(url):
@@ -169,6 +169,7 @@ with col_der:
         lista_final = "%0A".join([f"• {x['nombre']} (${x['precio']})" for x in st.session_state.carrito])
         msg_wa = f"¡Hola! Pedido Siberia:%0A{lista_final}%0A%0A*TOTAL: ${total}*{detalles_pago}"
         st.link_button("🚀 CONFIRMAR POR WHATSAPP", f"https://wa.me/{tel_negocio}?text={msg_wa}")
+
 
 
 
