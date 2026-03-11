@@ -108,7 +108,8 @@ with col_izq:
             		- Si piden algo fuera del menú, sugiere lo más parecido.
             		- Sé muy amable y describe los ingredientes (guacamole, crema, pollo) de forma antojable.
             		- Si piden sugerencias, recomienda el combo con consomé.
-                    - Si pregunta sobre servicio a domicilio, responde que el costo es de 30 pesos y pregunta sobre que colonia es el servicio para saber si esta dentro de la cobertura.
+                    - Si pregunta sobre servicio a domicilio, responde que el costo es de 30 pesos 
+                    - Pregunta sobre que colonia es el servicio para saber si esta dentro de la cobertura.
         		"""
                 with st.spinner("Analizando..."):
                     response = model.generate_content([prompt, pregunta])
@@ -171,6 +172,7 @@ with col_der:
         lista_final = "%0A".join([f"• {x['nombre']} (${x['precio']})" for x in st.session_state.carrito])
         msg_wa = f"¡Hola! Pedido:%0A{lista_final}%0A%0A*TOTAL: ${total}*{detalles_pago}"
         st.link_button("🚀 CONFIRMAR POR WHATSAPP", f"https://wa.me/{tel_negocio}?text={msg_wa}")
+
 
 
 
