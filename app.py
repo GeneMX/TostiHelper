@@ -4,7 +4,7 @@ import pandas as pd
 import time
 
 # --- CONFIGURACIÓN DE PÁGINA ---
-st.set_page_config(page_title="Tostadas Siberia - Pedidos", page_icon="🌮", layout="wide")
+st.set_page_config(page_title="Tostitellez Suc. Juarez - Asistente para Servicio a Domicilio", page_icon="🌮", layout="wide")
 
 if "carrito" not in st.session_state:
     st.session_state.carrito = []
@@ -175,6 +175,7 @@ with col_der:
         lista_final = "%0A".join([f"• {x['nombre']} (${x['precio']})" for x in st.session_state.carrito])
         msg_wa = f"¡Hola! Pedido:%0A{lista_final}%0A%0A*TOTAL: ${total}*{detalles_pago}"
         st.link_button("🚀 CONFIRMAR POR WHATSAPP", f"https://wa.me/{tel_negocio}?text={msg_wa}")
+
 
 
 
