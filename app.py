@@ -16,7 +16,7 @@ if "GOOGLE_API_KEY" not in st.secrets:
     st.stop()
 
 genai.configure(api_key=st.secrets["GOOGLE_API_KEY"])
-model = genai.GenerativeModel('models/gemini-1.5-flash')
+model = genai.GenerativeModel('models/gemini-2.5-flash')
 
 # --- FUNCIÓN PARA CARGAR DATOS ---
 SHEET_URL = "https://docs.google.com/spreadsheets/d/1SWaypb3Fq1rR_S1van5P8OYcJhO9m_lxYBAoLRgDjCk/edit?usp=sharing"
@@ -129,3 +129,4 @@ with col_der:
         lista_pedido = "%0A".join([f"• {x['nombre']} (${x['precio']})" for x in st.session_state.carrito])
         msg = f"¡Hola! Pedido Siberia:%0A{lista_pedido}%0A%0A*TOTAL: ${total}*{detalles_pago}"
         st.link_button("🚀 ENVIAR POR WHATSAPP", f"https://wa.me/{tel_negocio}?text={msg}")
+
