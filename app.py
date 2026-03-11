@@ -138,6 +138,7 @@ with col_der:
     else:
         # Versión segura que ignora errores de texto en los precios
         total = sum(float(item['precio']) if str(item['precio']).replace('.','',1).isdigit() else 0.0 for item in st.session_state.carrito)
+        total = total + 25
         for i, item in enumerate(st.session_state.carrito):
             c1, c2 = st.columns([4, 1])
             c1.write(f"{item['nombre']} (${item['precio']})")
@@ -146,10 +147,10 @@ with col_der:
                 st.rerun()
         
         st.divider()
-        st.write(f"### Total: ${total}")
+        st.write(f"### Total con envio: ${total}")
 
         # GESTIÓN DE PAGO
-        metodo = st.radio("Pago:", ["Efectivo (Necesito cambio)", "Exacto / Tarjeta"])
+        metodo = st.radio("Pago:", ["Efectivo (Necesito cambio)", "Exacto / Transferencia"])
         detalles_pago = ""
         
         if "Efectivo" in metodo:
@@ -172,6 +173,7 @@ with col_der:
         lista_final = "%0A".join([f"• {x['nombre']} (${x['precio']})" for x in st.session_state.carrito])
         msg_wa = f"¡Hola! Pedido:%0A{lista_final}%0A%0A*TOTAL: ${total}*{detalles_pago}"
         st.link_button("🚀 CONFIRMAR POR WHATSAPP", f"https://wa.me/{tel_negocio}?text={msg_wa}")
+
 
 
 
