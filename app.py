@@ -15,7 +15,7 @@ if "GOOGLE_API_KEY" not in st.secrets:
     st.stop()
 
 genai.configure(api_key=st.secrets["GOOGLE_API_KEY"])
-model = genai.GenerativeModel('gemini-1.5-flash')
+model = genai.GenerativeModel('gemini-2.5-flash')
 
 # --- FUNCIÓN PARA CARGAR DATOS (CON LIMPIEZA DE COLUMNAS) ---
 SHEET_URL = "https://docs.google.com/spreadsheets/d/1SWaypb3Fq1rR_S1van5P8OYcJhO9m_lxYBAoLRgDjCk/edit?usp=sharing"
@@ -147,3 +147,4 @@ with col_der:
         )
         
         st.link_button("🚀 ENVIAR PEDIDO POR WHATSAPP", f"https://wa.me/{tel_negocio}?text={texto_wa}")
+
