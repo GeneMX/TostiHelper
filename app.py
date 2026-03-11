@@ -53,13 +53,13 @@ def cargar_datos(url):
 df_menu = cargar_datos(SHEET_URL)
 
 # --- INTERFAZ ---
-st.title("🌮 Tostadas Tipo Siberia: Pedido Inteligente")
+st.title("🌮 Tostitellez Sucursal Juarez: Asistente para Servicio a Domicilio")
 
 col_izq, col_der = st.columns([2, 1])
 
 with col_izq:
     st.subheader("🤖 Consulta al Asistente")
-    pregunta = st.text_input("¿En qué puedo ayudarte?", placeholder="Pide el menú o pregunta por promociones...")
+    pregunta = st.text_input("¿En qué puedo ayudarte?", placeholder="Pide el menú o pregunta por promociones o pregunta por el costo de servicio a domicilio o dudas ")
     
     if pregunta:
         preg = pregunta.lower()
@@ -117,7 +117,12 @@ with col_izq:
                     response = model.generate_content([prompt, pregunta])
                     st.info(response.text)
             except Exception as e:
-                st.error("Asistente temporalmente ocupado.")
+                st.error("Asistente temporalmente ocupado. - Se contactara con un agente por whatsapp")
+                 # WHATSAPP
+                tel_negocio = "528130447383" # <-- REEMPLAZA CON EL CELULAR REAL
+                msg_wa = f"¡Hola! Mensaje:%0A{preg}"
+                st.link_button("🚀 CONFIRMAR POR WHATSAPP", f"https://wa.me/{tel_negocio}?text={msg_wa}")
+
 
     # --- BOTONES DE PRODUCTOS ---
     st.write("---")
@@ -175,6 +180,7 @@ with col_der:
         lista_final = "%0A".join([f"• {x['nombre']} (${x['precio']})" for x in st.session_state.carrito])
         msg_wa = f"¡Hola! Pedido:%0A{lista_final}%0A%0A*TOTAL: ${total}*{detalles_pago}"
         st.link_button("🚀 CONFIRMAR POR WHATSAPP", f"https://wa.me/{tel_negocio}?text={msg_wa}")
+
 
 
 
